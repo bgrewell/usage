@@ -1,0 +1,36 @@
+name: Go Code Coverage
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  coverage:
+    name: Test and Coverage Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.18' # Adjust to match your Go version
+
+      - name: Run tests with coverage
+        run: |
+          go test ./... -coverprofile=coverage.out
+          go tool cover -func=coverage.out
+
+      - name: Upload coverage to Codecov # Optional step
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # Ensure to set CODECOV_TOKEN in your repository's secrets
+          file: ./coverage.out
+          flags: unittests # Optional
+          name: codecov-umbrella
+          fail_ci_if_error: true # Optional
+          verbose: true # Optional
