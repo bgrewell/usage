@@ -1,5 +1,9 @@
 # Usage
 
+[![golangci-lint](https://github.com/bgrewell/usage/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/bgrewell/usage/actions/workflows/golangci-lint.yml)
+
+## About
+
 Streamline your Go applications with our powerful CLI management tool. Designed for developers, by developers, this 
 project simplifies command-line argument parsing, enhances error handling, and standardizes usage output. With 'usage', 
 setting up and parsing flags becomes effortless, allowing you to focus more on building robust applications. Optimize 
