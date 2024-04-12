@@ -1,9 +1,10 @@
 package main
 
-import (
-  "fmt"
-)
+import "github.com/bgrewell/usage"
 
 func main() {
-  fmt.Println("main template")
+	// Create a new sage to handle command line arguments
+	sage := usage.NewUseSage()
+
+	_ := sage
 }
