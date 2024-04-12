@@ -18,19 +18,19 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.18' # Adjust to match your Go version
+          go-version: '1.21'
 
       - name: Run tests with coverage
         run: |
           go test ./... -coverprofile=coverage.out
           go tool cover -func=coverage.out
 
-      - name: Upload coverage to Codecov # Optional step
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }} # Ensure to set CODECOV_TOKEN in your repository's secrets
+          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.out
-          flags: unittests # Optional
+          flags: unittests
           name: codecov-umbrella
-          fail_ci_if_error: true # Optional
-          verbose: true # Optional
+          fail_ci_if_error: true
+          verbose: true
