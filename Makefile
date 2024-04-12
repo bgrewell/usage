@@ -15,26 +15,30 @@ LD_FLAGS=-X 'main.version=$$(git describe --tags)' -X 'main.date=$$(date +"%Y.%m
 # Tool Arguments
 TAGS=json,yaml,xml
 
+# Define the targets
+.PHONY: all build clean deps install-tools run tags
+
+
 build: deps
-    export GO111MODULE=on
-    [ -d bin ] || mkdir bin
-    GOOS=linux $(GOBUILD) -ldflags "$(LD_FLAGS)" -o bin/$(BINARY_NAME) -v .
-    GOOS=windows $(OBUILD) -ldflags "$(LD_FLAGS)" -o bin/$(BINARY_NAME).exe -v .
+	export GO111MODULE=on
+	[ -d bin ] || mkdir bin
+	GOOS=linux $(GOBUILD) -ldflags "$(LD_FLAGS)" -o bin/$(BINARY_NAME) -v .
+	GOOS=windows $(OBUILD) -ldflags "$(LD_FLAGS)" -o bin/$(BINARY_NAME).exe -v .
     
 clean:
-    $(GOCLEAN)
-    rm -rf bin
+	$(GOCLEAN)
+	rm -rf bin
 
 deps:
-    export GOPRIVATE=github.com/bengrewell
-    $(GOGET) -u ./...
+	export GOPRIVATE=github.com/bengrewell
+	$(GOGET) -u ./...
 
 install-tools:
-    go install google.golang.org/protobuf/cmd/protoc-gen-go
-    go get github.com/fatih/gomodifytags
+	go install google.golang.org/protobuf/cmd/protoc-gen-go
+	go get github.com/fatih/gomodifytags
 
 run:
-    $(GORUN) cmd/main.go
+	$(GORUN) cmd/main.go
     
 tags:
-    gomodifytags -file $(FILE) -all -add-tags $(TAGS) -w
+	gomodifytags -file $(FILE) -all -add-tags $(TAGS) -w

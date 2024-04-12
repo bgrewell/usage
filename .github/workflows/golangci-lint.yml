@@ -14,7 +14,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: '1.18'  # Replace with the version of Go you are using
+          go-version: '1.21'
 
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
