@@ -42,6 +42,12 @@ func WithApplicationBranch(branch string) UsageOption {
 	}
 }
 
+func WithApplicationDescription(description string) UsageOption {
+	return func(sage UseSage) {
+		sage.SetApplicationDescription(description)
+	}
+}
+
 func NewGroup(title string) Group {
 	g := StandardGroup{}
 	g.SetTitle(title)

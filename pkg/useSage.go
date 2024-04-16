@@ -11,6 +11,8 @@ type UseSage interface {
 	SetApplicationRevision(revision string)
 	ApplicationBranch() string
 	SetApplicationBranch(branch string)
+	ApplicationDescription() string
+	SetApplicationDescription(description string)
 	Groups() []Group
 	AddGroup(group Group)
 	Usage()

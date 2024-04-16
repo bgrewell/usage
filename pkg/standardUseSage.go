@@ -6,12 +6,13 @@ import (
 )
 
 type StandardUseSage struct {
-	applicationName     string
-	applicationVersion  string
-	applicationBuild    string
-	applicationRevision string
-	applicationBranch   string
-	groups              []Group
+	applicationName        string
+	applicationVersion     string
+	applicationBuild       string
+	applicationRevision    string
+	applicationBranch      string
+	applicationDescription string
+	groups                 []Group
 }
 
 func (s *StandardUseSage) ApplicationName() string {
@@ -48,6 +49,14 @@ func (s *StandardUseSage) ApplicationBranch() string {
 }
 func (s *StandardUseSage) SetApplicationBranch(branch string) {
 	s.applicationBranch = branch
+}
+
+func (s *StandardUseSage) ApplicationDescription() string {
+	return s.applicationDescription
+}
+
+func (s *StandardUseSage) SetApplicationDescription(description string) {
+	s.applicationDescription = description
 }
 
 func (s *StandardUseSage) Groups() []Group {
