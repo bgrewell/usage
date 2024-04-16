@@ -1,10 +1,49 @@
 package usage
 
-import "github.com/bgrewell/usage/pkg"
+import . "github.com/bgrewell/usage/pkg"
 
-func NewUseSage() UseSage {
-	return &pkg.StandardUseSage{}
+type UsageOption func(sage UseSage)
+
+func NewUseSage(options ...UsageOption) UseSage {
+	u := &StandardUseSage{}
+	for _, opt := range options {
+		opt(u)
+	}
+	return u
 }
 
-type UseSage interface {
+func WithApplicationName(name string) UsageOption {
+	return func(sage UseSage) {
+		sage.SetApplicationName(name)
+	}
+}
+
+func WithApplicationVersion(version string) UsageOption {
+	return func(sage UseSage) {
+		sage.SetApplicationVersion(version)
+	}
+}
+
+func WithApplicationBuild(build string) UsageOption {
+	return func(sage UseSage) {
+		sage.SetApplicationBuild(build)
+	}
+}
+
+func WithApplicationRevision(revision string) UsageOption {
+	return func(sage UseSage) {
+		sage.SetApplicationRevision(revision)
+	}
+}
+
+func WithApplicationBranch(branch string) UsageOption {
+	return func(sage UseSage) {
+		sage.SetApplicationBranch(branch)
+	}
+}
+
+func NewGroup(title string) Group {
+	g := StandardGroup{}
+	g.SetTitle(title)
+	return &g
 }
