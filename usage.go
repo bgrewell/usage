@@ -1,55 +1,92 @@
 package usage
 
-import . "github.com/bgrewell/usage/pkg"
+import (
+	"fmt"
+	"github.com/bgrewell/usage/internal"
+)
 
-type UsageOption func(sage UseSage)
+type UsageOption func(sage *Usage)
 
-func NewUseSage(options ...UsageOption) UseSage {
-	u := &StandardUseSage{}
+func WithApplicationName(name string) UsageOption {
+	return func(u *Usage) {
+		u.applicationName = name
+	}
+}
+
+func WithApplicationVersion(version string) UsageOption {
+	return func(u *Usage) {
+		u.applicationVersion = version
+	}
+}
+
+func WithApplicationBuild(build string) UsageOption {
+	return func(u *Usage) {
+		u.applicationBuild = build
+	}
+}
+
+func WithApplicationRevision(revision string) UsageOption {
+	return func(u *Usage) {
+		u.applicationRevision = revision
+	}
+}
+
+func WithApplicationBranch(branch string) UsageOption {
+	return func(u *Usage) {
+		u.applicationBranch = branch
+	}
+}
+
+func WithApplicationDescription(description string) UsageOption {
+	return func(u *Usage) {
+		u.applicationDescription = description
+	}
+}
+
+func NewUsage(options ...UsageOption) *Usage {
+	u := &Usage{
+		applicationName: internal.GetExecutableName(),
+	}
 	for _, opt := range options {
 		opt(u)
 	}
 	return u
 }
 
-func WithApplicationName(name string) UsageOption {
-	return func(sage UseSage) {
-		sage.SetApplicationName(name)
-	}
+type Usage struct {
+	applicationName        string
+	applicationVersion     string
+	applicationBuild       string
+	applicationRevision    string
+	applicationBranch      string
+	applicationDescription string
+	groups                 []Group
 }
 
-func WithApplicationVersion(version string) UsageOption {
-	return func(sage UseSage) {
-		sage.SetApplicationVersion(version)
-	}
+func (s *Usage) ApplicationName() string {
+	return s.applicationName
 }
 
-func WithApplicationBuild(build string) UsageOption {
-	return func(sage UseSage) {
-		sage.SetApplicationBuild(build)
-	}
+func (s *Usage) ApplicationVersion() string {
+	return s.applicationVersion
 }
 
-func WithApplicationRevision(revision string) UsageOption {
-	return func(sage UseSage) {
-		sage.SetApplicationRevision(revision)
-	}
+func (s *Usage) ApplicationBuild() string {
+	return s.applicationBuild
 }
 
-func WithApplicationBranch(branch string) UsageOption {
-	return func(sage UseSage) {
-		sage.SetApplicationBranch(branch)
-	}
+func (s *Usage) ApplicationRevision() string {
+	return s.applicationRevision
 }
 
-func WithApplicationDescription(description string) UsageOption {
-	return func(sage UseSage) {
-		sage.SetApplicationDescription(description)
-	}
+func (s *Usage) ApplicationBranch() string {
+	return s.applicationBranch
 }
 
-func NewGroup(title string) Group {
-	g := StandardGroup{}
-	g.SetTitle(title)
-	return &g
+func (s *Usage) ApplicationDescription() string {
+	return s.applicationDescription
+}
+
+func (s *Usage) Usage() {
+	fmt.Println("Peanut Butter")
 }
