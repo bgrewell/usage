@@ -16,7 +16,7 @@ func GetExecutableName() string {
 	// Base returns the last element of the path.
 	exeName := filepath.Base(exePath)
 
-	// TrimSuffix removes the extension from the executable name.
+	// TrimSuffix removes the extension from the executable Name.
 	// Adjust the cut set based on expected executable extensions.
 	return strings.TrimSuffix(exeName, filepath.Ext(exeName))
 }

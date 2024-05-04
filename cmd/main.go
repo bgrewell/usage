@@ -2,30 +2,45 @@ package main
 
 import "github.com/bgrewell/usage"
 
+var (
+	buildDate  string
+	commitHash string
+	branch     string
+)
+
 func main() {
 	// Create a new sage to handle command line arguments
 	sage := usage.NewUsage(
-		usage.WithApplicationName("Bowser"),
+		usage.WithApplicationName("bowser"),
 		usage.WithApplicationVersion("0.0.1"),
-		usage.WithApplicationBuild("debug"),
-		usage.WithApplicationRevision("rev X"),
-		usage.WithApplicationBranch("development"),
+		usage.WithApplicationBuildDate(buildDate),
+		usage.WithApplicationCommitHash(commitHash),
+		usage.WithApplicationBranch(branch),
 		usage.WithApplicationDescription("It's almost a browser but not quite"))
 
-	default_group := sage.AddGroup("Default Options", "These are the default options")
+	// Add some options
+	output_file := sage.AddStringOption("o", "output", "", "Output filename", "", nil)
 
-	timeout := default_group.AddIntegerOption("t", "timeout", 10, "Timeout in seconds", "", default_group)
-	agent := default_group.AddStringOption("u", "user-agent", "Bowser/0.0.1", "The user agent to use", "")
-	request_type := default_group.AddStringOption("r", "request-type", "GET", "The type of request to make", "")
-	follow := default_group.AddBooleanOption("f", "follow", false, "Follow Redirects", "not yet implemented")
-	url := default_group.AddArgument(1, "url", "The url of the page to retrieve", "Extra")
+	// Add an options group
+	request_group := sage.AddGroup("Request Options", "Options related http request")
+	agent := sage.AddStringOption("u", "user-agent", "Bowser/0.0.1", "The user agent to use", "", request_group)
+	request_type := sage.AddStringOption("r", "request-type", "GET", "The type of request to make", "", request_group)
+	follow := sage.AddBooleanOption("f", "follow", false, "Follow Redirects", "not yet implemented", request_group)
+	timeout := sage.AddIntegerOption("t", "timeout", 10, "Timeout in seconds", "", request_group)
 
-	sage.AddGroup(default_group)
+	url := sage.AddArgument(1, "url", "The url of the page to retrieve", "Extra")
 
 	parsed := sage.Parse()
 
 	if !parsed {
 		sage.PrintUsage()
 	}
+
+	_ = output_file
+	_ = agent
+	_ = request_type
+	_ = follow
+	_ = timeout
+	_ = url
 
 }

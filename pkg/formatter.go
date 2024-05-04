@@ -1,8 +1,14 @@
 package pkg
 
-import "io"
+import (
+	"github.com/bgrewell/usage/internal"
+	"io"
+)
 
-type Formatter interface {
-	Usage()
-	SetOutput(output io.Writer)
+func NewStandardFormatter(output, error io.Writer, config *internal.Configuration) internal.Formatter {
+	return &internal.StandardFormatter{
+		Output:        output,
+		Error:         error,
+		Configuration: config,
+	}
 }

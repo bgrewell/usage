@@ -22,13 +22,13 @@ func TestWithApplicationVersion(t *testing.T) {
 }
 
 func TestWithApplicationBuild(t *testing.T) {
-	sage := usage.NewUsage(usage.WithApplicationBuild("100"))
-	assert.Equal(t, "100", sage.ApplicationBuild())
+	sage := usage.NewUsage(usage.WithApplicationBuildDate("100"))
+	assert.Equal(t, "100", sage.ApplicationBuildDate())
 }
 
 func TestWithApplicationRevision(t *testing.T) {
-	sage := usage.NewUsage(usage.WithApplicationRevision("abc123"))
-	assert.Equal(t, "abc123", sage.ApplicationRevision())
+	sage := usage.NewUsage(usage.WithApplicationCommitHash("abc123"))
+	assert.Equal(t, "abc123", sage.ApplicationCommitHash())
 }
 
 func TestWithApplicationBranch(t *testing.T) {
@@ -45,15 +45,15 @@ func TestNewUseSageWithMultipleOptions(t *testing.T) {
 	sage := usage.NewUsage(
 		usage.WithApplicationName("TestApp"),
 		usage.WithApplicationVersion("1.0.0"),
-		usage.WithApplicationBuild("100"),
-		usage.WithApplicationRevision("abc123"),
+		usage.WithApplicationBuildDate("100"),
+		usage.WithApplicationCommitHash("abc123"),
 		usage.WithApplicationBranch("main"),
 		usage.WithApplicationDescription("Test Description"),
 	)
 	assert.Equal(t, "TestApp", sage.ApplicationName())
 	assert.Equal(t, "1.0.0", sage.ApplicationVersion())
-	assert.Equal(t, "100", sage.ApplicationBuild())
-	assert.Equal(t, "abc123", sage.ApplicationRevision())
+	assert.Equal(t, "100", sage.ApplicationBuildDate())
+	assert.Equal(t, "abc123", sage.ApplicationCommitHash())
 	assert.Equal(t, "main", sage.ApplicationBranch())
 	assert.Equal(t, "Test Description", sage.ApplicationDescription())
 }
@@ -62,8 +62,8 @@ func TestNewUseSageWithNoOptions(t *testing.T) {
 	sage := usage.NewUsage()
 	assert.NotEmpty(t, sage.ApplicationName())
 	assert.Empty(t, sage.ApplicationVersion())
-	assert.Empty(t, sage.ApplicationBuild())
-	assert.Empty(t, sage.ApplicationRevision())
+	assert.Empty(t, sage.ApplicationBuildDate())
+	assert.Empty(t, sage.ApplicationCommitHash())
 	assert.Empty(t, sage.ApplicationBranch())
 	assert.Empty(t, sage.ApplicationDescription())
 }
