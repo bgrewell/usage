@@ -245,5 +245,10 @@ func (s *Usage) Parse() bool {
 
 func (s *Usage) PrintUsage() {
 	s.formatter.PrintUsage()
+	os.Exit(0)
+}
+
+func (s *Usage) PrintError(err error) {
+	s.formatter.PrintError(err)
 	os.Exit(1)
 }
