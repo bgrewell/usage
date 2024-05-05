@@ -43,4 +43,4 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add README.md
           git commit -m "Update README.md with latest usage information"
-          git push
+          git push https://${{ secrets.GH_TOKEN }}@github.com/bgrewell/usage.git
