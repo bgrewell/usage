@@ -2,12 +2,12 @@
 GO := go
 BINARY_NAME := $(shell basename $(CURDIR))
 VERSION := $(shell git describe --tags --always --dirty)
-BUILD_DATE := $(shell date '+%Y-%m-%d_%H:%M:%S')
+BUILD_DATE := $(shell date '+%Y-%m-%d.%H%M%S')
 COMMIT_HASH := $(shell git rev-parse --short HEAD)
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD | tr -d '\040\011\012\015\n')
 
 # Compiler flags
-LD_FLAGS := -X 'main.version=$(VERSION)' -X 'main.date=$(BUILD_DATE)' -X 'main.rev=$(COMMIT_HASH)' -X 'main.branch=$(BRANCH)'
+LD_FLAGS := -X 'main.version=$(VERSION)' -X 'main.buildDate=$(BUILD_DATE)' -X 'main.commitHash=$(COMMIT_HASH)' -X 'main.branch=$(BRANCH)'
 
 # Tool arguments
 TAGS := json,yaml,xml

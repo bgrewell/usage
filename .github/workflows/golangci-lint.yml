@@ -1,3 +1,4 @@
+# .github/workflows/golangci-lint.yml
 name: golangci-lint
 
 on: [push, pull_request]

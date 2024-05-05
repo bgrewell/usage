@@ -20,3 +20,30 @@ func GetExecutableName() string {
 	// Adjust the cut set based on expected executable extensions.
 	return strings.TrimSuffix(exeName, filepath.Ext(exeName))
 }
+
+// wrapText wraps the given text to the specified width and returns a slice of lines.
+// It automatically indents the second and subsequent lines by the specified number of spaces.
+func wrapText(text string, width int, prefixLen int) []string {
+	var lines []string
+	words := strings.Fields(text)
+	line := ""
+	lineLength := width - prefixLen
+	for _, word := range words {
+		if len(line)+len(word)+1 > lineLength {
+			lines = append(lines, line)
+			line = ""
+			if len(lines) > 0 {
+				lineLength = width
+			}
+		}
+		if line == "" {
+			line = word
+		} else {
+			line += " " + word
+		}
+	}
+	if line != "" {
+		lines = append(lines, line)
+	}
+	return lines
+}

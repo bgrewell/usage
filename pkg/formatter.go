@@ -12,3 +12,11 @@ func NewStandardFormatter(output, error io.Writer, config *internal.Configuratio
 		Configuration: config,
 	}
 }
+
+func NewColorFormatter(output, error io.Writer, config *internal.Configuration) internal.Formatter {
+	return &internal.ColorFormatter{
+		Output:        output,
+		Error:         error,
+		Configuration: config,
+	}
+}

@@ -1,0 +1,40 @@
+# .github/workflows/update-readme.yml
+name: Update README
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'README.md' # Ignore changes to README.md
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build example program
+        run: make build
+
+      - name: Generate help output
+        run: bin/usage -h > help_output.txt
+
+      - name: Update README
+        run: python scripts/update_readme.py help_output.txt
+
+      # Check if the workflow was triggered by a push to README.md
+      - name: Check if workflow was triggered by README.md push
+        if: ${{ github.event_name == 'push' && contains(github.event.inputs.paths, 'README.md') }}
+        run: exit 0  # Skip subsequent steps if triggered by push to README.md
+
+      # Otherwise, commit and push changes
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add README.md
+          git commit -m "Update README.md with latest usage information"
+          git push

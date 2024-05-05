@@ -65,11 +65,12 @@ func NewUsage(options ...UsageOption) *Usage {
 	}
 	u := &Usage{
 		configuration: c,
-		formatter:     pkg.NewStandardFormatter(os.Stdout, os.Stderr, c),
+		formatter:     pkg.NewColorFormatter(os.Stdout, os.Stderr, c),
 	}
 	for _, opt := range options {
 		opt(u)
 	}
+	flag.Usage = u.PrintUsage
 	return u
 }
 
@@ -223,11 +224,23 @@ func (s *Usage) AddStringOption(short string, long string, default_value string,
 }
 
 func (s *Usage) AddArgument(position int, name string, description string, extra string) *string {
-	return nil
+	var argString string
+	argString = "NEED TO IMPLEMENT STILL!!"
+
+	// Create argument
+	a := internal.Argument{
+		Position:    position,
+		Name:        name,
+		Description: description,
+	}
+	s.configuration.Groups[GROUP_DEFAULT].AddArgument(&a)
+
+	return &argString
 }
 
 func (s *Usage) Parse() bool {
-	return false
+	flag.Parse()
+	return flag.Parsed()
 }
 
 func (s *Usage) PrintUsage() {

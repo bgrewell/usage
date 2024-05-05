@@ -15,3 +15,9 @@ CLI tools more user-friendly and maintainable!
 ## Coverage
 
 ![image](https://codecov.io/gh/bgrewell/usage/graphs/sunburst.svg?token=MP7QKP53BG)
+
+## Example Output
+
+```text
+...auto-update with latest example...
+```

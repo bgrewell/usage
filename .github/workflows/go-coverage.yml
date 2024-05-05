@@ -1,3 +1,4 @@
+# .github/workflows/go-coverage.yml
 name: Go Code Coverage
 
 on:

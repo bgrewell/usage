@@ -64,29 +64,3 @@ func (f *StandardFormatter) PrintError(err error) {
 	fmt.Fprintln(f.Error, "Error: ", err)
 	f.PrintUsage()
 }
-
-// ---------------------------------------------------------------------------------------------------------------------
-//
-// <error_message_if_present>
-// Usage: <app_name> [OPTIONS] [ARGUMENTS]
-//
-// Description: <app_description>
-//
-// Options:
-//   <group_name_if_more_than_one>: <group_description_if_present>
-//   -h, --help					Display this help message
-//   -v, --version				Display the application version
-//   -b, --build				Display the application build
-//   -r, --revision				Display the application revision
-//   -B, --branch				Display the application branch
-//
-// Examples:
-//  <app_name> -x -y -z arg1 arg2
-//    This is an example of how to use the application
-//
-//  <app_name> -a -b arg1
-//    This is another example of how to use the application
-//
-// <post_output_message>
-//
-//
