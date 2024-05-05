@@ -24,6 +24,10 @@ func GetExecutableName() string {
 // wrapText wraps the given text to the specified width and returns a slice of lines.
 // It automatically indents the second and subsequent lines by the specified number of spaces.
 func wrapText(text string, width int, prefixLen int) []string {
+	if text == "" {
+		return []string{""}
+	}
+
 	var lines []string
 	words := strings.Fields(text)
 	line := ""
