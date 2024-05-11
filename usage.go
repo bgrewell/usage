@@ -77,6 +77,7 @@ func NewUsage(options ...UsageOption) *Usage {
 type Usage struct {
 	configuration *internal.Configuration
 	formatter     internal.Formatter
+	arguments     []*string
 }
 
 func (s *Usage) ApplicationName() string {
@@ -225,7 +226,7 @@ func (s *Usage) AddStringOption(short string, long string, default_value string,
 
 func (s *Usage) AddArgument(position int, name string, description string, extra string) *string {
 	var argString string
-	argString = "NEED TO IMPLEMENT STILL!!"
+	s.arguments = append(s.arguments, &argString)
 
 	// Create argument
 	a := internal.Argument{
@@ -240,6 +241,17 @@ func (s *Usage) AddArgument(position int, name string, description string, extra
 
 func (s *Usage) Parse() bool {
 	flag.Parse()
+
+	// Populate arguments
+	for i, arg := range flag.Args() {
+		// If this is the last argument in s.arguments then accumulate the rest of the arguments joined by a space
+		if i >= len(s.arguments) {
+			*s.arguments[len(s.arguments)-1] += " " + arg
+		} else {
+			*s.arguments[i] = arg
+		}
+	}
+
 	return flag.Parsed()
 }
 
