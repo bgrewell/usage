@@ -27,6 +27,7 @@ func (f *ColorFormatter) PrintUsage() {
 	optionHeaderColor := color.New(color.FgHiBlue)
 	optionDescColor := color.New(color.FgWhite)
 	optionColor := color.New(color.FgGreen)
+	optionDefaultColor := color.New(color.FgHiCyan)
 
 	// Print the usage line with colors
 	usageColor.Fprint(f.Output, "Usage: ")
@@ -76,11 +77,13 @@ func (f *ColorFormatter) PrintUsage() {
 
 	headerColor.Fprintln(f.Output, "Options:")
 	for _, group := range f.Configuration.Groups {
+		sw, lw, dvw, dsw := group.CalculateOptionWidths()
 		optionHeaderColor.Fprintf(f.Output, "  %s: ", group.Name)
 		lineColor.Fprintf(f.Output, "%s\n", group.Description)
 		for _, option := range group.Options {
-			optionColor.Fprintf(f.Output, "    -%s, --%s\t\t", option.Short, option.Long)
-			optionDescColor.Fprintf(f.Output, "%s\n", option.Description)
+			optionColor.Fprintf(f.Output, "    -%-*s, --%-*s", sw, option.Short, lw, option.Long)
+			optionDefaultColor.Fprintf(f.Output, "  %-*v", dvw, option.Default)
+			optionDescColor.Fprintf(f.Output, "  %-*s\n", dsw, option.Description)
 		}
 		fmt.Fprintln(f.Output, "")
 	}
@@ -93,8 +96,8 @@ func (f *ColorFormatter) PrintUsage() {
 			return arguments[i].Position < arguments[j].Position
 		})
 		for _, argument := range arguments {
-			optionColor.Fprintf(f.Output, "    %s\t\t", argument.Name)
-			optionDescColor.Fprintf(f.Output, "%s\n", argument.Description)
+			optionColor.Fprintf(f.Output, "    %s", argument.Name)
+			optionDescColor.Fprintf(f.Output, "  %s\n", argument.Description)
 		}
 	}
 }

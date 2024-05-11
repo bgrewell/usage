@@ -31,7 +31,6 @@ func main() {
 	request_type := sage.AddStringOption("r", "request-type", "GET", "The type of request to make", "", request_group)
 	follow := sage.AddBooleanOption("f", "follow", false, "Follow Redirects", "not yet implemented", request_group)
 	timeout := sage.AddIntegerOption("t", "timeout", 10, "Timeout in seconds", "", request_group)
-	_ = sage.AddStringOption("l", "really_long_option_test", "", "Long option to check formatting", "", request_group)
 	url := sage.AddArgument(1, "url", "The url of the page to retrieve", "Extra")
 
 	parsed := sage.Parse()

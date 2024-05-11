@@ -1,5 +1,7 @@
 package internal
 
+import "fmt"
+
 type Group struct {
 	Name        string
 	Description string
@@ -31,4 +33,23 @@ func (g *Group) RemoveArgument(argument *Argument) {
 			break
 		}
 	}
+}
+
+func (g *Group) CalculateOptionWidths() (shortWidth, longWidth, defaultValueWidth, descriptionWidth int) {
+	for _, option := range g.Options {
+		if len(option.Short) > shortWidth {
+			shortWidth = len(option.Short)
+		}
+		if len(option.Long) > longWidth {
+			longWidth = len(option.Long)
+		}
+		defaultValueStr := fmt.Sprintf("%v", option.Default)
+		if len(defaultValueStr) > defaultValueWidth {
+			defaultValueWidth = len(defaultValueStr)
+		}
+		if len(option.Description) > descriptionWidth {
+			descriptionWidth = len(option.Description)
+		}
+	}
+	return
 }
