@@ -107,6 +107,7 @@ func (f *ColorFormatter) PrintError(err error) {
 		f.Error = os.Stderr
 	}
 
-	fmt.Fprintln(f.Error, "Error: ", err)
+	errColor := color.New(color.FgHiRed)
+	errColor.Fprintln(f.Error, "Error: ", err)
 	f.PrintUsage()
 }
