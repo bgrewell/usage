@@ -102,16 +102,24 @@ func (f *ColorFormatter) PrintUsage() {
 		fmt.Fprintln(f.Output, "")
 	}
 
-	headerColor.Fprintln(f.Output, "Arguments:")
+	// Get a count of the number of arguments
+	argumentCount := 0
 	for _, group := range f.Configuration.Groups {
-		arguments := group.Arguments
-		// Sort the arguments by position
-		sort.Slice(arguments, func(i, j int) bool {
-			return arguments[i].Position < arguments[j].Position
-		})
-		for _, argument := range arguments {
-			optionColor.Fprintf(f.Output, "    %s", argument.Name)
-			optionDescColor.Fprintf(f.Output, "  %s\n", argument.Description)
+		argumentCount += len(group.Arguments)
+	}
+
+	if argumentCount > 0 {
+		headerColor.Fprintln(f.Output, "Arguments:")
+		for _, group := range f.Configuration.Groups {
+			arguments := group.Arguments
+			// Sort the arguments by position
+			sort.Slice(arguments, func(i, j int) bool {
+				return arguments[i].Position < arguments[j].Position
+			})
+			for _, argument := range arguments {
+				optionColor.Fprintf(f.Output, "    %s", argument.Name)
+				optionDescColor.Fprintf(f.Output, "  %s\n", argument.Description)
+			}
 		}
 	}
 }

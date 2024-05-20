@@ -21,3 +21,11 @@ CLI tools more user-friendly and maintainable!
 ```text
 ...auto-update with latest example...
 ```
+
+
+
+## Coming Soon
+
+1. Header above columns (flags, default, description)
+2. Columnization across groups
+3. Arguments section shouldn't be printed if there are no arguments
