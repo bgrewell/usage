@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	GROUP_DEFAULT = "default"
+	GROUP_DEFAULT = "Default"
 )
 
 type UsageOption func(sage *Usage)
