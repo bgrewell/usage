@@ -60,7 +60,7 @@ func NewUsage(options ...UsageOption) *Usage {
 	c := &internal.Configuration{
 		ApplicationName: internal.GetExecutableName(),
 		Groups: map[string]*internal.Group{
-			GROUP_DEFAULT: pkg.NewGroup(GROUP_DEFAULT, "Default Options"),
+			GROUP_DEFAULT: pkg.NewGroup(0, GROUP_DEFAULT, "Default Options"),
 		},
 	}
 	u := &Usage{
@@ -104,8 +104,8 @@ func (s *Usage) ApplicationDescription() string {
 	return s.configuration.ApplicationDescription
 }
 
-func (s *Usage) AddGroup(name string, description string) *internal.Group {
-	group := pkg.NewGroup(name, description)
+func (s *Usage) AddGroup(priority int, name string, description string) *internal.Group {
+	group := pkg.NewGroup(priority, name, description)
 	s.configuration.Groups[name] = group
 	return group
 }

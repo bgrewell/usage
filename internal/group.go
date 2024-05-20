@@ -3,6 +3,7 @@ package internal
 import "fmt"
 
 type Group struct {
+	Priority    int
 	Name        string
 	Description string
 	Options     []*Option

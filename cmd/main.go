@@ -26,7 +26,7 @@ func main() {
 	output_file := sage.AddStringOption("o", "output", "", "Output filename", "", nil)
 
 	// Add an options group
-	request_group := sage.AddGroup("Request Options", "Options related http request")
+	request_group := sage.AddGroup(1, "Request Options", "Options related http request")
 	agent := sage.AddStringOption("u", "user-agent", "Bowser/0.0.1", "The user agent to use", "", request_group)
 	request_type := sage.AddStringOption("r", "request-type", "GET", "The type of request to make", "", request_group)
 	follow := sage.AddBooleanOption("f", "follow", false, "Follow Redirects", "not yet implemented", request_group)

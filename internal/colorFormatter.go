@@ -75,8 +75,18 @@ func (f *ColorFormatter) PrintUsage() {
 		fmt.Fprintln(f.Output, "")
 	}
 
+	// Get all the keys for the groups so we can get the priorities and then sort them
+	groupKeys := make([]string, 0, len(f.Configuration.Groups))
+	for key := range f.Configuration.Groups {
+		groupKeys = append(groupKeys, key)
+	}
+	sort.Slice(groupKeys, func(i, j int) bool {
+		return f.Configuration.Groups[groupKeys[i]].Priority < f.Configuration.Groups[groupKeys[j]].Priority
+	})
+
 	headerColor.Fprintln(f.Output, "Options:")
-	for _, group := range f.Configuration.Groups {
+	for _, key := range groupKeys {
+		group := f.Configuration.Groups[key]
 		sw, lw, dvw, dsw := group.CalculateOptionWidths()
 		optionHeaderColor.Fprintf(f.Output, "  %s: ", group.Name)
 		lineColor.Fprintf(f.Output, "%s\n", group.Description)
