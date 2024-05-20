@@ -81,7 +81,7 @@ func (f *ColorFormatter) PrintUsage() {
 		optionHeaderColor.Fprintf(f.Output, "  %s: ", group.Name)
 		lineColor.Fprintf(f.Output, "%s\n", group.Description)
 		for _, option := range group.Options {
-			optionColor.Fprintf(f.Output, "    -%-*s, --%-*s", sw, option.Short, lw, option.Long)
+			optionColor.Fprintf(f.Output, "    -%-*s --%-*s", sw, option.Short, lw, option.Long)
 			optionDefault := option.Default
 			if optionDefault == "" {
 				optionDefault = "-"
