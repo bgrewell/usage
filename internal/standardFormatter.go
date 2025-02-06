@@ -48,6 +48,9 @@ func (f *StandardFormatter) PrintUsage() {
 
 	fmt.Println("Options:")
 	for _, group := range f.Configuration.Groups {
+		if len(group.Options) == 0 {
+			continue
+		}
 		fmt.Printf("  %s: %s\n", group.Name, group.Description)
 		for _, option := range group.Options {
 			fmt.Printf("    -%s, --%s\t\t%s\n", option.Short, option.Long, option.Description)
