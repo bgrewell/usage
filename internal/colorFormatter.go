@@ -87,6 +87,9 @@ func (f *ColorFormatter) PrintUsage() {
 	headerColor.Fprintln(f.Output, "Options:")
 	for _, key := range groupKeys {
 		group := f.Configuration.Groups[key]
+		if len(group.Options) == 0 {
+			continue
+		}
 		sw, lw, dvw, dsw := group.CalculateOptionWidths()
 		optionHeaderColor.Fprintf(f.Output, "  %s: ", group.Name)
 		lineColor.Fprintf(f.Output, "%s\n", group.Description)
