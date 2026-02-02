@@ -110,22 +110,15 @@ func (s *Usage) AddGroup(priority int, name string, description string) *interna
 	return group
 }
 
-func (s *Usage) AddBooleanOption(short string, long string, default_value bool, description string, extra string, group *internal.Group) *bool {
-	// Add flags
-	var flagBool bool
-	flag.BoolVar(&flagBool, short, default_value, description)
-	flag.BoolVar(&flagBool, long, default_value, description)
-
-	// Create option
+func (s *Usage) addOption(short string, long string, defaultValue interface{}, description string, extra string, group *internal.Group) {
 	o := internal.Option{
 		Short:       short,
 		Long:        long,
-		Default:     default_value,
+		Default:     defaultValue,
 		Description: description,
 		Extra:       extra,
 	}
 
-	// Add option to group
 	if group == nil {
 		group = s.configuration.Groups[GROUP_DEFAULT]
 	}
@@ -135,92 +128,53 @@ func (s *Usage) AddBooleanOption(short string, long string, default_value bool, 
 	} else {
 		log.Fatalf("Group %s does not exist", group.Name)
 	}
+}
 
-	// Return the flag
+func (s *Usage) AddBooleanOption(short string, long string, defaultValue bool, description string, extra string, group *internal.Group) *bool {
+	var flagBool bool
+	if short != "" {
+		flag.BoolVar(&flagBool, short, defaultValue, description)
+	}
+	if long != "" {
+		flag.BoolVar(&flagBool, long, defaultValue, description)
+	}
+	s.addOption(short, long, defaultValue, description, extra, group)
 	return &flagBool
 }
 
-func (s *Usage) AddIntegerOption(short string, long string, default_value int, description string, extra string, group *internal.Group) *int {
+func (s *Usage) AddIntegerOption(short string, long string, defaultValue int, description string, extra string, group *internal.Group) *int {
 	var flagInt int
-	flag.IntVar(&flagInt, short, default_value, description)
-	flag.IntVar(&flagInt, long, default_value, description)
-
-	// Create option
-	o := internal.Option{
-		Short:       short,
-		Long:        long,
-		Default:     default_value,
-		Description: description,
-		Extra:       extra,
+	if short != "" {
+		flag.IntVar(&flagInt, short, defaultValue, description)
 	}
-
-	// Add option to group
-	if group == nil {
-		group = s.configuration.Groups[GROUP_DEFAULT]
+	if long != "" {
+		flag.IntVar(&flagInt, long, defaultValue, description)
 	}
-
-	if g, ok := s.configuration.Groups[group.Name]; ok {
-		g.AddOption(&o)
-	} else {
-		log.Fatalf("Group %s does not exist", group.Name)
-	}
-
+	s.addOption(short, long, defaultValue, description, extra, group)
 	return &flagInt
 }
 
-func (s *Usage) AddFloatOption(short string, long string, default_value float64, description string, extra string, group *internal.Group) *float64 {
+func (s *Usage) AddFloatOption(short string, long string, defaultValue float64, description string, extra string, group *internal.Group) *float64 {
 	var flagFloat float64
-	flag.Float64Var(&flagFloat, short, default_value, description)
-	flag.Float64Var(&flagFloat, long, default_value, description)
-
-	// Create option
-	o := internal.Option{
-		Short:       short,
-		Long:        long,
-		Default:     default_value,
-		Description: description,
-		Extra:       extra,
+	if short != "" {
+		flag.Float64Var(&flagFloat, short, defaultValue, description)
 	}
-
-	// Add option to group
-	if group == nil {
-		group = s.configuration.Groups[GROUP_DEFAULT]
+	if long != "" {
+		flag.Float64Var(&flagFloat, long, defaultValue, description)
 	}
-
-	if g, ok := s.configuration.Groups[group.Name]; ok {
-		g.AddOption(&o)
-	} else {
-		log.Fatalf("Group %s does not exist", group.Name)
-	}
-
+	s.addOption(short, long, defaultValue, description, extra, group)
 	return &flagFloat
 }
 
-func (s *Usage) AddStringOption(short string, long string, default_value string, description string, extra string, group *internal.Group) *string {
+func (s *Usage) AddStringOption(short string, long string, defaultValue string, description string, extra string, group *internal.Group) *string {
 	var flagString string
-	flag.StringVar(&flagString, short, default_value, description)
-	flag.StringVar(&flagString, long, default_value, description)
-
-	// Create option
-	o := internal.Option{
-		Short:       short,
-		Long:        long,
-		Default:     default_value,
-		Description: description,
-		Extra:       extra,
+	if short != "" {
+		flag.StringVar(&flagString, short, defaultValue, description)
 	}
-
-	// Add option to group
-	if group == nil {
-		group = s.configuration.Groups[GROUP_DEFAULT]
+	if long != "" {
+		flag.StringVar(&flagString, long, defaultValue, description)
 	}
-
-	if g, ok := s.configuration.Groups[group.Name]; ok {
-		g.AddOption(&o)
-	} else {
-		log.Fatalf("Group %s does not exist", group.Name)
-	}
-
+	s.addOption(short, long, defaultValue, description, extra, group)
 	return &flagString
 }
 

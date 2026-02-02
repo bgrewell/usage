@@ -4,10 +4,10 @@ import (
 	"testing"
 )
 
-func NewGroupCreation(t *testing.T) {
+func TestNewGroupCreation(t *testing.T) {
 	name := "testGroup"
 	description := "This is a test group"
-	group := NewGroup(name, description)
+	group := NewGroup(0, name, description)
 
 	if group.Name != name {
 		t.Errorf("NewGroup() = %v; want %v", group.Name, name)
@@ -18,20 +18,20 @@ func NewGroupCreation(t *testing.T) {
 	}
 }
 
-func NewGroupEmptyName(t *testing.T) {
+func TestNewGroupEmptyName(t *testing.T) {
 	name := ""
 	description := "This is a test group"
-	group := NewGroup(name, description)
+	group := NewGroup(0, name, description)
 
 	if group.Name != name {
 		t.Errorf("NewGroup() = %v; want %v", group.Name, name)
 	}
 }
 
-func NewGroupEmptyDescription(t *testing.T) {
+func TestNewGroupEmptyDescription(t *testing.T) {
 	name := "testGroup"
 	description := ""
-	group := NewGroup(name, description)
+	group := NewGroup(0, name, description)
 
 	if group.Description != description {
 		t.Errorf("NewGroup() = %v; want %v", group.Description, description)
