@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+// GetExecutableName returns the name of the current executable without extension.
+// It extracts the basename from the executable path and removes any file extension.
+// This is used as the default application name if not explicitly provided.
 func GetExecutableName() string {
 	// Executable returns the path to the current executable.
 	exePath, err := os.Executable()
@@ -22,7 +25,9 @@ func GetExecutableName() string {
 }
 
 // wrapText wraps the given text to the specified width and returns a slice of lines.
-// It automatically indents the second and subsequent lines by the specified number of spaces.
+// It splits text on word boundaries to fit within the specified width, accounting
+// for a prefix length on the first line. Subsequent lines use the full width.
+// This is used internally by formatters to wrap long descriptions.
 func wrapText(text string, width int, prefixLen int) []string {
 	if text == "" {
 		return []string{""}
