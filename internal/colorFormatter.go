@@ -18,15 +18,41 @@ type ColorFormatter struct {
 	Configuration *Configuration // Application and option configuration
 }
 
-// PrintUsage outputs formatted usage information with ANSI color codes.
-// It displays application metadata (version, build date, commit hash),
-// description, options grouped by category, and positional arguments.
-// If Output is nil, it defaults to os.Stdout.
-func (f *ColorFormatter) PrintUsage() {
-	if f.Output == nil {
-		f.Output = os.Stdout
+// FormatUsage returns the formatted usage information as a string with ANSI color codes.
+// This method does not mutate the formatter or print anything, making it suitable
+// for programmatic usage and testing.
+func (f *ColorFormatter) FormatUsage() string {
+	// Create a temporary formatter with a buffer as output
+	tempFormatter := &ColorFormatter{
+		Output:        nil, // Will be set below
+		Error:         f.Error,
+		Configuration: f.Configuration,
 	}
 
+	// Use a byte slice to capture output
+	var output []byte
+	writer := &writeCapture{data: &output}
+	tempFormatter.Output = writer
+
+	// Generate the formatted output
+	tempFormatter.printUsageToWriter()
+
+	return string(output)
+}
+
+// writeCapture implements io.Writer to capture output
+type writeCapture struct {
+	data *[]byte
+}
+
+func (w *writeCapture) Write(p []byte) (n int, err error) {
+	*w.data = append(*w.data, p...)
+	return len(p), nil
+}
+
+// printUsageToWriter contains the core formatting logic that writes to f.Output.
+// This is extracted to be reusable by both PrintUsage and FormatUsage.
+func (f *ColorFormatter) printUsageToWriter() {
 	// Define colors
 	lineColor := color.New(color.FgHiWhite)
 	usageColor := color.New(color.FgHiBlue, color.Bold)
@@ -132,6 +158,17 @@ func (f *ColorFormatter) PrintUsage() {
 			}
 		}
 	}
+}
+
+// PrintUsage outputs formatted usage information with ANSI color codes.
+// It displays application metadata (version, build date, commit hash),
+// description, options grouped by category, and positional arguments.
+// If Output is nil, it defaults to os.Stdout.
+func (f *ColorFormatter) PrintUsage() {
+	if f.Output == nil {
+		f.Output = os.Stdout
+	}
+	f.printUsageToWriter()
 }
 
 // PrintError outputs the error message in red followed by the usage information.

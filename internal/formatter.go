@@ -12,4 +12,9 @@ type Formatter interface {
 	// PrintError outputs an error message along with usage information
 	// to the configured error writer.
 	PrintError(err error)
+
+	// FormatUsage returns the formatted usage information as a string.
+	// This method does not print anything or mutate state, making it suitable
+	// for programmatic usage and testing.
+	FormatUsage() string
 }

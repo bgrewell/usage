@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"github.com/bgrewell/usage/internal"
 	"github.com/bgrewell/usage/pkg"
-	"log"
 	"os"
 )
 
@@ -79,6 +78,38 @@ func WithFormatter(formatter internal.Formatter) UsageOption {
 	}
 }
 
+// WithExitOnHelp controls whether PrintUsage calls os.Exit(0).
+// Set to false to print usage without terminating the program.
+// Default: true (preserves existing behavior for backward compatibility).
+//
+// Example for library usage:
+//
+//	u := usage.NewUsage(
+//	    usage.WithApplicationName("mylib"),
+//	    usage.WithExitOnHelp(false),
+//	)
+func WithExitOnHelp(exit bool) UsageOption {
+	return func(u *Usage) {
+		u.exitOnHelp = exit
+	}
+}
+
+// WithExitOnError controls whether PrintError calls os.Exit(1).
+// Set to false to print errors without terminating the program.
+// Default: true (preserves existing behavior for backward compatibility).
+//
+// Example for library usage:
+//
+//	u := usage.NewUsage(
+//	    usage.WithApplicationName("mylib"),
+//	    usage.WithExitOnError(false),
+//	)
+func WithExitOnError(exit bool) UsageOption {
+	return func(u *Usage) {
+		u.exitOnError = exit
+	}
+}
+
 // NewUsage creates a new Usage instance with the provided functional options.
 // By default, it automatically detects the executable name, uses a ColorFormatter,
 // and creates a default option group. The function also sets flag.Usage to
@@ -101,6 +132,8 @@ func NewUsage(options ...UsageOption) *Usage {
 	u := &Usage{
 		configuration: c,
 		formatter:     pkg.NewColorFormatter(os.Stdout, os.Stderr, c),
+		exitOnHelp:    true, // Default to current behavior
+		exitOnError:   true, // Default to current behavior
 	}
 	for _, opt := range options {
 		opt(u)
@@ -116,6 +149,8 @@ type Usage struct {
 	configuration *internal.Configuration
 	formatter     internal.Formatter
 	arguments     []*string
+	exitOnHelp    bool // Control exit in PrintUsage (default: true)
+	exitOnError   bool // Control exit in PrintError (default: true)
 }
 
 // ApplicationName returns the configured application name.
@@ -182,14 +217,20 @@ func (s *Usage) addOptionE(short string, long string, defaultValue interface{}, 
 
 // addOption is a backward-compatible wrapper that panics on error.
 // Deprecated: Use addOptionE for proper error handling.
+// This method will panic with a descriptive error message if the operation fails.
 func (s *Usage) addOption(short string, long string, defaultValue interface{}, description string, extra string, group *internal.Group) {
 	err := s.addOptionE(short, long, defaultValue, description, extra, group)
 	if err != nil {
-		log.Fatalf("%v", err)
+		panic(fmt.Sprintf("usage: failed to add option: %v\nHint: use Add*OptionE methods for proper error handling", err))
 	}
 }
 
 // AddBooleanOption adds a boolean command-line flag.
+//
+// Deprecated: Use AddBooleanOptionE for proper error handling. This method
+// will panic if an error occurs (e.g., invalid group reference). The panic
+// includes a hint to migrate to error-returning methods.
+//
 // Parameters:
 //   - short: single-character flag name (e.g., "v" for -v), or empty string to skip
 //   - long: long flag name (e.g., "verbose" for --verbose), or empty string to skip
@@ -200,6 +241,17 @@ func (s *Usage) addOption(short string, long string, defaultValue interface{}, d
 //
 // Returns a pointer to the boolean value that will be populated by flag.Parse().
 // The method registers the flag with Go's standard flag package.
+//
+// Migration example:
+//
+//	// Old (deprecated):
+//	verbose := u.AddBooleanOption("v", "verbose", false, "Enable verbose output", "", nil)
+//
+//	// New (recommended):
+//	verbose, err := u.AddBooleanOptionE("v", "verbose", false, "Enable verbose output", "", nil)
+//	if err != nil {
+//	    return err
+//	}
 func (s *Usage) AddBooleanOption(short string, long string, defaultValue bool, description string, extra string, group *internal.Group) *bool {
 	var flagBool bool
 	if short != "" {
@@ -213,6 +265,11 @@ func (s *Usage) AddBooleanOption(short string, long string, defaultValue bool, d
 }
 
 // AddIntegerOption adds an integer command-line flag.
+//
+// Deprecated: Use AddIntegerOptionE for proper error handling. This method
+// will panic if an error occurs (e.g., invalid group reference). The panic
+// includes a hint to migrate to error-returning methods.
+//
 // Parameters:
 //   - short: single-character flag name (e.g., "p" for -p), or empty string to skip
 //   - long: long flag name (e.g., "port" for --port), or empty string to skip
@@ -223,6 +280,17 @@ func (s *Usage) AddBooleanOption(short string, long string, defaultValue bool, d
 //
 // Returns a pointer to the integer value that will be populated by flag.Parse().
 // The method registers the flag with Go's standard flag package.
+//
+// Migration example:
+//
+//	// Old (deprecated):
+//	port := u.AddIntegerOption("p", "port", 8080, "Server port", "", nil)
+//
+//	// New (recommended):
+//	port, err := u.AddIntegerOptionE("p", "port", 8080, "Server port", "", nil)
+//	if err != nil {
+//	    return err
+//	}
 func (s *Usage) AddIntegerOption(short string, long string, defaultValue int, description string, extra string, group *internal.Group) *int {
 	var flagInt int
 	if short != "" {
@@ -236,6 +304,11 @@ func (s *Usage) AddIntegerOption(short string, long string, defaultValue int, de
 }
 
 // AddFloatOption adds a float64 command-line flag.
+//
+// Deprecated: Use AddFloatOptionE for proper error handling. This method
+// will panic if an error occurs (e.g., invalid group reference). The panic
+// includes a hint to migrate to error-returning methods.
+//
 // Parameters:
 //   - short: single-character flag name (e.g., "r" for -r), or empty string to skip
 //   - long: long flag name (e.g., "rate" for --rate), or empty string to skip
@@ -246,6 +319,17 @@ func (s *Usage) AddIntegerOption(short string, long string, defaultValue int, de
 //
 // Returns a pointer to the float64 value that will be populated by flag.Parse().
 // The method registers the flag with Go's standard flag package.
+//
+// Migration example:
+//
+//	// Old (deprecated):
+//	rate := u.AddFloatOption("r", "rate", 1.5, "Processing rate", "", nil)
+//
+//	// New (recommended):
+//	rate, err := u.AddFloatOptionE("r", "rate", 1.5, "Processing rate", "", nil)
+//	if err != nil {
+//	    return err
+//	}
 func (s *Usage) AddFloatOption(short string, long string, defaultValue float64, description string, extra string, group *internal.Group) *float64 {
 	var flagFloat float64
 	if short != "" {
@@ -259,6 +343,11 @@ func (s *Usage) AddFloatOption(short string, long string, defaultValue float64, 
 }
 
 // AddStringOption adds a string command-line flag.
+//
+// Deprecated: Use AddStringOptionE for proper error handling. This method
+// will panic if an error occurs (e.g., invalid group reference). The panic
+// includes a hint to migrate to error-returning methods.
+//
 // Parameters:
 //   - short: single-character flag name (e.g., "o" for -o), or empty string to skip
 //   - long: long flag name (e.g., "output" for --output), or empty string to skip
@@ -269,6 +358,17 @@ func (s *Usage) AddFloatOption(short string, long string, defaultValue float64, 
 //
 // Returns a pointer to the string value that will be populated by flag.Parse().
 // The method registers the flag with Go's standard flag package.
+//
+// Migration example:
+//
+//	// Old (deprecated):
+//	output := u.AddStringOption("o", "output", "out.txt", "Output file", "", nil)
+//
+//	// New (recommended):
+//	output, err := u.AddStringOptionE("o", "output", "out.txt", "Output file", "", nil)
+//	if err != nil {
+//	    return err
+//	}
 func (s *Usage) AddStringOption(short string, long string, defaultValue string, description string, extra string, group *internal.Group) *string {
 	var flagString string
 	if short != "" {
@@ -396,17 +496,59 @@ func (s *Usage) Parse() bool {
 	return flag.Parsed()
 }
 
-// PrintUsage prints the usage information to the configured output writer
-// and calls os.Exit(0). This is automatically set as flag.Usage in NewUsage.
+// FormatUsage returns the formatted usage information as a string.
+// This method does not print anything or call os.Exit, making it suitable
+// for programmatic usage, testing, or when you need to customize output.
+//
+// Example:
+//
+//	helpText := u.FormatUsage()
+//	return fmt.Errorf("invalid arguments:\n%s", helpText)
+func (s *Usage) FormatUsage() string {
+	return s.formatter.FormatUsage()
+}
+
+// PrintUsageWithoutExit prints usage information to the configured output writer
+// without calling os.Exit. This is equivalent to calling PrintUsage with
+// WithExitOnHelp(false), but provides an explicit non-exiting alternative.
+//
+// Use this when you want to display help but continue program execution,
+// such as in interactive CLIs or embedded library usage.
+func (s *Usage) PrintUsageWithoutExit() {
+	s.formatter.PrintUsage()
+}
+
+// PrintErrorWithoutExit prints the error message and usage information to the
+// configured error writer without calling os.Exit. This is equivalent to calling
+// PrintError with WithExitOnError(false), but provides an explicit non-exiting alternative.
+//
+// Use this when you want to display an error but handle the exit yourself or
+// continue program execution.
+func (s *Usage) PrintErrorWithoutExit(err error) {
+	s.formatter.PrintError(err)
+}
+
+// PrintUsage prints the usage information to the configured output writer.
+// By default, this method calls os.Exit(0) after printing. To disable exit
+// behavior, use WithExitOnHelp(false) or call PrintUsageWithoutExit instead.
+//
+// This method is automatically set as flag.Usage in NewUsage.
 func (s *Usage) PrintUsage() {
 	s.formatter.PrintUsage()
-	os.Exit(0)
+	if s.exitOnHelp {
+		os.Exit(0)
+	}
 }
 
 // PrintError prints the error message and usage information to the configured
-// error writer and calls os.Exit(1). This is typically used when command-line
-// parsing or validation fails.
+// error writer. By default, this method calls os.Exit(1) after printing.
+// To disable exit behavior, use WithExitOnError(false) or call
+// PrintErrorWithoutExit instead.
+//
+// This is typically used when command-line parsing or validation fails.
 func (s *Usage) PrintError(err error) {
 	s.formatter.PrintError(err)
-	os.Exit(1)
+	if s.exitOnError {
+		os.Exit(1)
+	}
 }

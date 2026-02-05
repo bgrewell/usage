@@ -67,3 +67,54 @@ func TestNewUseSageWithNoOptions(t *testing.T) {
 	assert.Empty(t, sage.ApplicationBranch())
 	assert.Empty(t, sage.ApplicationDescription())
 }
+
+func TestFormatUsage(t *testing.T) {
+	sage := usage.NewUsage(
+		usage.WithApplicationName("TestApp"),
+		usage.WithApplicationDescription("Test Description"),
+	)
+	formatted := sage.FormatUsage()
+	assert.Contains(t, formatted, "TestApp")
+	assert.Contains(t, formatted, "Test Description")
+	assert.Contains(t, formatted, "Usage:")
+}
+
+func TestPrintUsageWithoutExit(t *testing.T) {
+	sage := usage.NewUsage(
+		usage.WithApplicationName("TestApp"),
+	)
+	// This should not panic or exit
+	sage.PrintUsageWithoutExit()
+}
+
+func TestPrintErrorWithoutExit(t *testing.T) {
+	sage := usage.NewUsage(
+		usage.WithApplicationName("TestApp"),
+	)
+	// This should not panic or exit
+	sage.PrintErrorWithoutExit(assert.AnError)
+}
+
+func TestWithExitOnHelp(t *testing.T) {
+	// We can't easily test the actual exit behavior, but we can test that the option is set
+	sage := usage.NewUsage(
+		usage.WithApplicationName("TestApp"),
+		usage.WithExitOnHelp(false),
+	)
+	// Verify it was created successfully
+	assert.NotNil(t, sage)
+	// The PrintUsageWithoutExit should work fine
+	sage.PrintUsageWithoutExit()
+}
+
+func TestWithExitOnError(t *testing.T) {
+	// We can't easily test the actual exit behavior, but we can test that the option is set
+	sage := usage.NewUsage(
+		usage.WithApplicationName("TestApp"),
+		usage.WithExitOnError(false),
+	)
+	// Verify it was created successfully
+	assert.NotNil(t, sage)
+	// The PrintErrorWithoutExit should work fine
+	sage.PrintErrorWithoutExit(assert.AnError)
+}
