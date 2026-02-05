@@ -9,12 +9,19 @@ import (
 	"github.com/fatih/color"
 )
 
+// ColorFormatter implements the Formatter interface using ANSI color codes
+// to enhance the visual appearance of usage output. It uses the fatih/color
+// package to provide colored text for different sections of the usage display.
 type ColorFormatter struct {
-	Output        io.Writer
-	Error         io.Writer
-	Configuration *Configuration
+	Output        io.Writer      // Writer for normal usage output (defaults to os.Stdout)
+	Error         io.Writer      // Writer for error messages (defaults to os.Stderr)
+	Configuration *Configuration // Application and option configuration
 }
 
+// PrintUsage outputs formatted usage information with ANSI color codes.
+// It displays application metadata (version, build date, commit hash),
+// description, options grouped by category, and positional arguments.
+// If Output is nil, it defaults to os.Stdout.
 func (f *ColorFormatter) PrintUsage() {
 	if f.Output == nil {
 		f.Output = os.Stdout
@@ -127,6 +134,9 @@ func (f *ColorFormatter) PrintUsage() {
 	}
 }
 
+// PrintError outputs the error message in red followed by the usage information.
+// If Error is nil, it defaults to os.Stderr. The error message is displayed
+// after the usage information to ensure the user sees both.
 func (f *ColorFormatter) PrintError(err error) {
 	if f.Error == nil {
 		f.Error = os.Stderr
