@@ -10,7 +10,12 @@ func GetExecutableName() string {
 	// Executable returns the path to the current executable.
 	exePath, err := os.Executable()
 	if err != nil {
-		panic(err) // Handle error according to your needs.
+		// Fallback to os.Args[0] if available
+		if len(os.Args) > 0 {
+			exePath = os.Args[0]
+		} else {
+			return "unknown"
+		}
 	}
 
 	// Base returns the last element of the path.
